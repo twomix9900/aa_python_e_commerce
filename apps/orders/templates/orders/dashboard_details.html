@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  {% load static %}
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+  <title>Order Details</title>
+</head>
+
+<nav>
+  <div class="nav-wrapper green darken-2">
+    <a href="" class="brand-logo">&nbsp;&nbsp;&nbsp;&nbsp;Hello {{request.session.user_first_name}} (ADMIN)</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li>        
+        <form action="/products/view/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Exit Admin</button>
+        </form>
+      </li>
+      <li>        
+        <form action="/orders/dashboard/view/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Orders</button>
+        </form>
+      </li>
+      <li>
+        <form action="/products/dashboard/view/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Products</button>
+        </form>
+      </li>
+      <li>
+        <form action="/logout/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Log out</button>
+        </form>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<body>
+
+  <div class="container">
+
+    <h1>ORDER {{order_id}} DETAILS</h1>
+
+    <div class="row">
+      <div class="col s12 m4">
+        <div class="card blue-grey">
+          <div class="card-content white-text">
+            <span class="card-title">Order ID: {{ order_id }}</span>
+            <p>Customer Shipping Info:</p>
+            <p>Name: Bob</p>
+            <p>Address: 123 Apple St</p>
+            <p>City: Los Angeles</p>
+            <p>State: CA</p>
+            <p>Zip: 90020</p>
+            <hr>
+            <p>Customer Billing Info:</p>
+            <p>Name: Bob</p>
+            <p>Address: 123 Apple St</p>
+            <p>City: Los Angeles</p>
+            <p>State: CA</p>
+            <p>Zip: 90020</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col s12 m7" >
+        <table class="striped" style="margin-bottom: 75px;">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Name</th>
+              <th>Date</th>
+              <th>Billing Address</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="">1</a></td>
+              <td>Bob</td>
+              <td>9/6/2018</td>
+              <td>123 Apple St. Los Angeles, CA 90020</td>
+              <td>$149.99</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="col s12 m6">
+          <div class="card blue-grey">
+            <div class="card-content white-text">
+            <span class="card-title">Status:</span>
+            <p>Shipped</p>
+          </div>
+          </div>
+        </div>
+        <div class="col s12 m6">
+          <div class="card blue-grey">
+            <div class="card-content white-text">
+              <span class="card-title">Total Price: $30.98</span>
+              <p>Sub total: $29.98</p>
+              <p>Shipping: $1.00</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  {% load static %}
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="{% static 'products/js/dashboard_view.js' %}"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'products/css/dashboard_view.css' %}" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+  <title>View Products</title>
+</head>
+
+<nav>
+  <div class="nav-wrapper blue-grey darken-2">
+    <a href="" class="brand-logo">&nbsp;&nbsp;&nbsp;&nbsp;Hello {{request.session.user_first_name}}</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      {% if admin %}
+      <li>        
+        <form action="/orders/dashboard/view/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">DASHBOARD (ADMIN)</button>
+        </form>
+      </li>
+      {% endif %}
+      <li>
+        <form action="/products/view/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Products</button>
+        </form>
+      </li>
+      <li>
+        <form action="/logout/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Log out</button>
+        </form>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col s6 m3">
+        <div class="card blue-grey darken-1">
+          <div class="card-content white-text">
+            <span class="card-title">
+              <form>
+                <input placeholder="Product Name" id="product_name" name="product_name" type="text" class="validate">
+              </form>
+            </span>
+            <h5>Categories</h5>
+            <p><a href="">Tshirts (25)</a></p>
+            <p><a href="">Shoes (35)</a></p>
+            <p><a href="">Cups (5)</a></p>
+            <p><a href="">Fruits (25)</a></p>
+            <p><a href="">Show All</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="col s6 m9">
+        <div class="card blue-grey darken-1">
+          <div class="card-content white-text">
+            <span class="card-title">
+              <h3>Tshirts (page 2)</h3>
+            </span>
+            <form>
+              <div class="input-field col s3 offset-m9 offset-s3 m3">
+                <select>
+                  <option value="show_all">Show All</option>
+                  <option value="order_in">Order In</option>
+                  <option value="processing">Processing</option>
+                  <option value="shipped">Shipped</option>
+                </select>
+              </div>
+            </form>
+          {% for product in products %}
+            <div style="display: inline-block; margin-left: 10px; margin: 5px">
+              <img src="{{ product.image }}" style="height: 96px">
+              <p>{{ product.name }}</p>
+              <p>${{ product.price }}</p>
+            </div>
+          {% endfor %}
+            <ul class="pagination">
+              <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+              <li class="active"><a href="#!" class="pagination-active">1</a></li>
+              <li class="waves-effect"><a href="#!">2</a></li>
+              <li class="waves-effect"><a href="#!">3</a></li>
+              <li class="waves-effect"><a href="#!">4</a></li>
+              <li class="waves-effect"><a href="#!">5</a></li>
+              <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+</body>
+</html>

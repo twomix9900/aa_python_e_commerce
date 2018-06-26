@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  {% load static %}
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="{% static 'orders/js/dashboard_view.js' %}"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'orders/css/dashboard_view.css' %}" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+  <title>View Orders</title>
+</head>
+
+<nav>
+  <div class="nav-wrapper green darken-2">
+    <a href="" class="brand-logo">&nbsp;&nbsp;&nbsp;&nbsp;Hello {{request.session.user_first_name}} (ADMIN)</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li>        
+        <form action="/products/view/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Exit Admin</button>
+        </form>
+      </li>
+      <li>        
+        <form action="/orders/dashboard/view/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Orders</button>
+        </form>
+      </li>
+      <li>
+        <form action="/products/dashboard/view/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Products</button>
+        </form>
+      </li>
+      <li>
+        <form action="/logout/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Log out</button>
+        </form>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<body>
+
+  <div class="container">
+    <div class="row">
+      <form>
+        <div class="input-field col s12 m4">
+          <input placeholder="Search" id="search" name="search" type="text" class="validate">
+        </div>
+      </form>
+
+      <form>
+        <div class="input-field col s12 offset-m5 m3">
+          <select>
+            <option value="show_all">Show All</option>
+            <option value="order_in">Order In</option>
+            <option value="processing">Processing</option>
+            <option value="shipped">Shipped</option>
+          </select>
+        </div>
+      </form>
+      
+    </div>
+
+    <h1>VIEW ORDERS</h1>
+    <table class="highlight">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Name</th>
+          <th>Date</th>
+          <th>Billing Address</th>
+          <th>Total</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td><a href="">1</a></td>
+          <td>Bob</td>
+          <td>9/6/2018</td>
+          <td>123 Apple St. Los Angeles, CA 90020</td>
+          <td>$149.99</td>
+          <td>
+            <form>
+              <div class="input-field col s12 offset-m5 m3">
+                <select>
+                  <option value="shipped">Shipped</option>
+                  <option value="order_in_process">Order In Process</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ul class="pagination">
+      <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+      <li class="active"><a href="#!" class="pagination-active">1</a></li>
+      <li class="waves-effect"><a href="#!">2</a></li>
+      <li class="waves-effect"><a href="#!">3</a></li>
+      <li class="waves-effect"><a href="#!">4</a></li>
+      <li class="waves-effect"><a href="#!">5</a></li>
+      <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+    </ul>
+
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+</body>
+</html>

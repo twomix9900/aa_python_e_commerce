@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  {% load static %}
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="{% static 'products/js/dashboard_edit.js' %}"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+  <title>Order Details</title>
+</head>
+
+<nav>
+  <div class="nav-wrapper green darken-2">
+    <a href="" class="brand-logo">&nbsp;&nbsp;&nbsp;&nbsp;Hello {{request.session.user_first_name}} (ADMIN)</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li>        
+        <form action="/products/view/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Exit Admin</button>
+        </form>
+      </li>
+      <li>        
+        <form action="/orders/dashboard/view/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Orders</button>
+        </form>
+      </li>
+      <li>
+        <form action="/products/dashboard/view/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Products</button>
+        </form>
+      </li>
+      <li>
+        <form action="/logout/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Log out</button>
+        </form>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<body>
+
+  <div class="container">
+
+    <h1>EDIT PRODUCT {{product_id}}</h1>
+
+    <div class="row">
+      <div class="col s12 m12">
+        <form>
+          <div class="input-field">
+            <input placeholder="Name" type="text">
+            <label for="Name">Name</label>
+          </div>
+          <div class="input-field">
+            <textarea name="description" class="materialize-textarea"></textarea>
+            <label for="description">Description</label>
+          </div>
+          <select>
+            <option value="" disabled selected>Categories</option>
+            <option value="1">Shirt</option>
+            <option value="2">Hat</option>
+            <option value="3">Mug</option>
+            <option value="3">Pants</option>
+            <option value="3">Key Chain</option>
+            <option value="3">Belt</option>
+          </select>
+        </form>
+      </div>
+    </div>
+    <h5>IMAGES</h5>
+    <form>
+      <button class="btn waves-effect blue-grey waves-light" type="submit">
+        Upload Image
+      </button>
+    </form>
+    <div class="row">
+      <div class="col s2 m1 offset-m4 offset-s2">
+        <form style="display: inline-block!important">
+          <button class="btn waves-effect red lighten-2 waves-light" type="submit">
+            Cancel
+          </button>
+        </form>
+      </div>
+      <div class="col s2 m1 offset-m1 offset-s2">
+        <form style="display: inline-block!important">
+          <button class="btn waves-effect orange lighten-1 waves-light" type="submit">
+            Preview
+          </button>
+        </form>
+      </div>
+      <div class="col s2 m1 offset-m1 offset-s2">
+        <form style="display: inline-block!important">
+          <button class="btn waves-effect green lighten-1 waves-light" type="submit">
+            Update
+          </button>
+        </form>
+      </div>
+    </div>
+
+
+
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+</body>
+</html>

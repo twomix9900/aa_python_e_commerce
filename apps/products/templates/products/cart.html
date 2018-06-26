@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  {% load static %}
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="{% static 'products/js/cart.js' %}"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'products/css/dcart.css' %}" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+  <title>View Products</title>
+</head>
+
+<nav>
+  <div class="nav-wrapper blue-grey darken-2">
+    <a href="" class="brand-logo">&nbsp;&nbsp;&nbsp;&nbsp;Hello {{request.session.user_first_name}}</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      {% if admin %}
+      <li>        
+        <form action="/orders/dashboard/view/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">DASHBOARD (ADMIN)</button>
+        </form>
+      </li>
+      {% endif %}
+      <li>
+        <form action="/products/view/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Products</button>
+        </form>
+      </li>
+      <li>
+        <form action="/logout/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Log out</button>
+        </form>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<body>
+  <div class="container">
+    <h1>CART</h1>
+      <div class="col s12 m12">
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+  
+          <tbody>
+            <tr>
+              <td>Black Belt for Staff</td>
+              <td>$19.99</td>
+              <td>1</td>
+              <td>$19.99</td>
+            </tr>
+            <tr>
+              <td>Cups</td>
+              <td>$9.99</td>
+              <td>3</td>
+              <td>$29.97</td>
+            </tr>
+          </tbody>
+        </table>
+        <h5 style="text-align: right">Total: $49.96</h5>
+        <form>
+          <button class="btn waves-effect waves-light" type="submit" name="action" style="float: right">
+            Continue Shopping
+          </button>
+        </form>
+        
+        <div class="row">
+          <form class="col s12">
+            <h3>Shipping Information</h3>
+            <div class="input-field col s6">
+              <input placeholder="First Name" name="first_name" type="text" class="validate">
+              <label>First Name</label>
+            </div>
+            <div class="input-field col s6">
+              <input name="last_name" placeholder="Last Name"type="text" class="validate">
+              <label>Last Name</label>
+            </div>
+
+            <div class="input-field col s12">
+              <input name="address_1" placeholder="Address 1" type="text" class="validate">
+              <label>Address 1</label>
+            </div>
+
+            <div class="input-field col s12">
+              <input name="address_2" placeholder="Address 2" type="text" class="validate">
+              <label>Address 2</label>
+            </div>
+
+            <div class="input-field col m6 s6">
+              <input name="city" placeholder="City" type="text" class="validate">
+              <label>City</label>
+            </div>
+            <div class="input-field col m3 s3">
+              <input name="state" placeholder="State" type="text" class="validate">
+              <label>State</label>
+            </div>
+            <div class="input-field col m3 s3">
+              <input name="zip_code" placeholder="Zip Code" type="text" class="validate">
+              <label>Zip Code</label>
+            </div>
+
+            <h3>Billing Information</h3>
+            <div class="input-field col s6">
+              <input placeholder="First Name" name="billing_first_name" type="text" class="validate">
+              <label>First Name</label>
+            </div>
+            <div class="input-field col s6">
+              <input name="billing_last_name" placeholder="Last Name"type="text" class="validate">
+              <label>Last Name</label>
+            </div>
+
+            <div class="input-field col s12">
+              <input name="billing_address_1" placeholder="Address 1" type="text" class="validate">
+              <label>Address 1</label>
+            </div>
+
+            <div class="input-field col s12">
+              <input name="billing_address_2" placeholder="Address 2" type="text" class="validate">
+              <label>Address 2</label>
+            </div>
+
+            <div class="input-field col m6 s6">
+              <input name="billing_city" placeholder="City" type="text" class="validate">
+              <label>City</label>
+            </div>
+            <div class="input-field col m3 s3">
+              <input name="billing_state" placeholder="State" type="text" class="validate">
+              <label>State</label>
+            </div>
+            <div class="input-field col m3 s3">
+              <input name="billing_zip_code" placeholder="Zip Code" type="text" class="validate">
+              <label>Zip Code</label>
+            </div>
+            <h3>Credit Card Information</h3>
+            <div class="input-field col m6 s6">
+              <input name="card_number" placeholder="Card Number" type="text" class="validate">
+              <label>Number</label>
+            </div>
+            <div class="input-field col m3 s3">
+              <input name="card_security_code" placeholder="Security Code" type="text" class="validate">
+              <label>Security Code</label>
+            </div>
+            <div class="input-field col m1 s1">
+              <input name="card_expiration_month" placeholder="MM" type="number" min="1" max="12">
+            </div>
+            <div class="input-field col m1 s1">
+              <input name="card_expiration_year" placeholder="YY" type="number" min="18" max="50">
+            </div>
+            <button class="btn waves-effect waves-light" type="submit">Pay
+              <i class="material-icons right">send</i>
+            </button>
+          </form>
+        </div>
+      </div>
+
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+</body>
+</html>
