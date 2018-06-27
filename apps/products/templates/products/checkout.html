@@ -32,6 +32,12 @@
         </form>
       </li>
       <li>
+        <form action="/products/cart/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Cart</button>
+        </form>
+      </li>
+      <li>
         <form action="/logout/" method="POST">
           {% csrf_token %}
           <button class="waves-effect waves-teal btn-flat white-text" type="submit">Log out</button>

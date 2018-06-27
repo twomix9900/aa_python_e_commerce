@@ -32,6 +32,12 @@
         </form>
       </li>
       <li>
+        <form action="/products/cart/" method="POST">
+          {% csrf_token %}
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Cart</button>
+        </form>
+      </li>
+      <li>
         <form action="/logout/" method="POST">
           {% csrf_token %}
           <button class="waves-effect waves-teal btn-flat white-text" type="submit">Log out</button>
@@ -53,11 +59,10 @@
               </form>
             </span>
             <h5>Categories</h5>
-            <p><a href="">Tshirts (25)</a></p>
-            <p><a href="">Shoes (35)</a></p>
-            <p><a href="">Cups (5)</a></p>
-            <p><a href="">Fruits (25)</a></p>
-            <p><a href="">Show All</a></p>
+            <p><a href="/products/category/">All ({{ all_products.count }})</a></p>
+            {% for product in product_categories %}
+              <p><a href="/products/category/?category={{product.category}}">{{ product.category }} ({{ product.count }})</a></p>
+            {% endfor %}
           </div>
         </div>
       </div>
@@ -65,10 +70,14 @@
         <div class="card blue-grey darken-1">
           <div class="card-content white-text">
             <span class="card-title">
-              <h3>Tshirts (page 2)</h3>
+              {% if request.session.category %}
+                <h3>{{ request.session.category }}</h3>
+                {% else %}
+                <h3>All</h3>
+              {% endif %}
             </span>
             <form>
-              <div class="input-field col s3 offset-m9 offset-s3 m3">
+              <div class="input-field col 9 offset-m9 offset-s3 m3" style="margin-top: -20px;">
                 <select>
                   <option value="show_all">Show All</option>
                   <option value="order_in">Order In</option>
@@ -79,20 +88,33 @@
             </form>
           {% for product in products %}
             <div style="display: inline-block; margin-left: 10px; margin: 5px">
-              <img src="{{ product.image }}" style="height: 96px">
+              <a href="/products/{{ product.id }}/details/"><img src="{{ product.image }}" style="height: 96px"></a>
               <p>{{ product.name }}</p>
               <p>${{ product.price }}</p>
             </div>
           {% endfor %}
+
+          {% if products.has_other_pages %}
             <ul class="pagination">
-              <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-              <li class="active"><a href="#!" class="pagination-active">1</a></li>
-              <li class="waves-effect"><a href="#!">2</a></li>
-              <li class="waves-effect"><a href="#!">3</a></li>
-              <li class="waves-effect"><a href="#!">4</a></li>
-              <li class="waves-effect"><a href="#!">5</a></li>
-              <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+              {% if products.has_previous %}
+                <li><a href="?page={{ products.previous_page_number }}"><i class="material-icons" style="color: white;">chevron_left</i></a></li>
+              {% else %}
+                <li class="disabled" style="color: grey;"><i class="material-icons">chevron_left</i></a></li>
+              {% endif %}
+              {% for i in products.paginator.page_range %}
+                {% if products.number == i %}
+                  <li class="active"><a href="#!" class="pagination-active" style="color: orange">{{ i }}</a></li>
+                {% else %}
+                <li class="waves-effect"><a href="?page={{ i }}" style="color: white;">{{ i }}</a></li>
+                {% endif %}
+              {% endfor%}
+              {% if products.has_next %}
+                <li class="waves-effect"><a href="?page={{ products.next_page_number }}"><i class="material-icons" style="color: white;">chevron_right</i></a></li>
+              {% else %}
+                <li class="disabled" style="color: grey;"><i class="material-icons">chevron_right</i></li>
+              {% endif %}
             </ul>
+          {% endif %}
           </div>
         </div>
       </div>
