@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   {% load static %}
+  {% load mathfilters %}
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   <script type="text/javascript" src="{% static 'products/js/cart.js' %}"></script>
   <link rel="stylesheet" type="text/css" href="{% static 'products/css/dcart.css' %}" />
@@ -34,7 +35,7 @@
       <li>
         <form action="/products/cart/" method="POST">
           {% csrf_token %}
-          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Cart</button>
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Cart ({{request.session.cart_count}})</button>
         </form>
       </li>
       <li>
@@ -58,26 +59,29 @@
               <th>Price</th>
               <th>Quantity</th>
               <th>Total</th>
+              <th>Action</th>
             </tr>
           </thead>
   
           <tbody>
+            {% for product in request.session.cart %}
             <tr>
-              <td>Black Belt for Staff</td>
-              <td>$19.99</td>
-              <td>1</td>
-              <td>$19.99</td>
+              <td>{{ product.name }}</td>
+              <td>${{ product.price }}</td>
+              <td>{{ product.quantity }}</td>
+              <td>${{ product.total }}</td>
+              <td>
+                <form action="/products/cart/delete/?product={{product.name}}" method="POST">
+                  {% csrf_token %}
+                  <button class="waves-effect waves-teal btn-flat" type="submit" name="item" value={{product}}>Remove</button>
+                </form>
+              </td>
             </tr>
-            <tr>
-              <td>Cups</td>
-              <td>$9.99</td>
-              <td>3</td>
-              <td>$29.97</td>
-            </tr>
+          {% endfor %}
           </tbody>
         </table>
-        <h5 style="text-align: right">Total: $49.96</h5>
-        <form>
+        <h5 style="text-align: right">Total: ${{ total }}</h5>
+        <form action="/products/view/">
           <button class="btn waves-effect waves-light" type="submit" name="action" style="float: right">
             Continue Shopping
           </button>

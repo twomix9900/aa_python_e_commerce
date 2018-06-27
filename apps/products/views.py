@@ -26,7 +26,6 @@ def view(request):
     products = paginator.page(1)
   except EmptyPage:
     products = paginator.page(paginator.num_pages)
-  
 
   context = {
     "admin": User.objects.get(id=request.session["user_id"]).admin,
@@ -37,25 +36,22 @@ def view(request):
   return render(request, "products/view.html", context)
 
 def details(request, product_id):
+  product = Product.objects.get(id=product_id)
+  temp = product.price
+  product.price = temp/100
   context = {
-    "product": Product.objects.get(id=product_id)
+    "product": product
   }
   return render(request, "products/details.html", context)
 
-def cart(request, product_id):
-  if "cart" not in request.session:
-    request.session["cart"] = []
-  print(request.POST["quantity"])
-  product = Product.objects.get(id=product_id)
-  item = {
-    'name': product.name,
-    'quantity': request.POST["quantity"],
-    'price': product.price
-  }
-  request.session["cart"].append(item)
-  print(request.session["cart"])
+def cart(request):
+  total = 0
+  for item in request.session["cart"]:
+    total += item["total"]
+  round(total,2)
   context = {
     "admin": User.objects.get(id=request.session["user_id"]).admin,
+    "total": total,
   }
   return render(request, "products/cart.html", context)
 
@@ -67,3 +63,27 @@ def category(request):
   if request.session["category"] == '':
     del request.session["category"]
   return redirect("/products/view/")
+
+def cartprocess(request, product_id):
+  product = Product.objects.get(id=product_id)
+  item = {
+    'name': product.name,
+    'quantity': request.POST["quantity"],
+    'price': product.price/100,
+    'total': product.price * int(request.POST["quantity"]) / 100
+  }
+  new_cart = request.session["cart"].append(item)
+  request.session["cart_count"] += int(request.POST["quantity"])
+  request.session.modified = True
+  return redirect("/products/cart/")
+
+def delete_cart_item(request):
+  product = request.GET.get("product","")
+  idx = None
+  for i in range(len(request.session["cart"])):
+    if request.session["cart"][i]["name"] == product:
+      idx = i
+  if idx != None:
+    request.session["cart"].pop(idx)
+    request.session.modified = True
+  return redirect("/products/cart/")

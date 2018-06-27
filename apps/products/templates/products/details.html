@@ -34,7 +34,7 @@
       <li>
         <form action="/products/cart/" method="POST">
           {% csrf_token %}
-          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Cart</button>
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Cart ({{request.session.cart_count}})</button>
         </form>
       </li>
       <li>
@@ -59,9 +59,9 @@
             <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem aperiam eum laboriosam molestiae officiis fugit nemo aliquam animi! Laborum quae ducimus, beatae laudantium est accusantium rerum repudiandae quas ullam aperiam.</h5>
             <h5>Price: ${{ product.price }}</h5>
             <span>
-              <form method="POST" action="/products/cart/{{ product.id }}/">
+              <form method="POST" action="/products/cartprocess/{{ product.id }}/">
                 {% csrf_token %}
-                <input type="number" name="quantity" min=1 max=100 placeholder="Quantity" class="col s2 m2" style="color: white;">
+                <input type="number" name="quantity" value=1 min=1 max=100 class="col s2 m2" style="color: white;">
                 <button class="btn waves-effect waves-light" type="submit" style="margin-left: 30px; margin-top: 10px;">
                   Buy
                 </button>

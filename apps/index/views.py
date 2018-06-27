@@ -11,6 +11,10 @@ def login(request):
     try:
       result = User.objects.login_validator(request.POST)
       if "success" in result:
+        if "cart" not in request.session:
+          request.session["cart"] = []
+        if "cart_count" not in request.session:
+          request.session["cart_count"] = 0
         request.session["user_id"] = result["success"].id
         request.session["user_first_name"] = result["success"].first_name
         messages.add_message(request, messages.SUCCESS, 'Log in successful', extra_tags="log_in")
@@ -29,6 +33,10 @@ def register(request):
     try:    
       result = User.objects.registration_validator(request.POST)
       if "success" in result:
+        if "cart" not in request.session:
+          request.session["cart"] = []
+        if "cart_count" not in request.session:
+          request.session["cart_count"] = 0
         request.session["user_id"] = result["success"].id
         request.session["user_first_name"] = result["success"].first_name
         messages.add_message(request, messages.SUCCESS, 'Registration successful', extra_tags="registration")

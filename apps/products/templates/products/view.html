@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   {% load static %}
+  {% load mathfilters %}
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   <script type="text/javascript" src="{% static 'products/js/dashboard_view.js' %}"></script>
   <link rel="stylesheet" type="text/css" href="{% static 'products/css/dashboard_view.css' %}" />
@@ -34,7 +35,7 @@
       <li>
         <form action="/products/cart/" method="POST">
           {% csrf_token %}
-          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Cart</button>
+          <button class="waves-effect waves-teal btn-flat white-text" type="submit">Cart ({{request.session.cart_count}})</button>
         </form>
       </li>
       <li>
@@ -90,7 +91,7 @@
             <div style="display: inline-block; margin-left: 10px; margin: 5px">
               <a href="/products/{{ product.id }}/details/"><img src="{{ product.image }}" style="height: 96px"></a>
               <p>{{ product.name }}</p>
-              <p>${{ product.price }}</p>
+              <p>${{ product.price|div:"100"}}</p>
             </div>
           {% endfor %}
 
