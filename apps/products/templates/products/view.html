@@ -18,7 +18,7 @@
   <div class="nav-wrapper blue-grey darken-2">
     <a href="" class="brand-logo">&nbsp;&nbsp;&nbsp;&nbsp;Hello {{request.session.user_first_name}}</a>
     <ul id="nav-mobile" class="right hide-on-med-and-down">
-      {% if admin %}
+      {% if user.admin %}
       <li>        
         <form action="/orders/dashboard/view/" method="POST">
           {% csrf_token %}
@@ -33,7 +33,7 @@
         </form>
       </li>
       <li>
-        <form action="/products/cart/" method="POST">
+        <form action="/orders/cart/" method="POST">
           {% csrf_token %}
           <button class="waves-effect waves-teal btn-flat white-text" type="submit">Cart ({{request.session.cart_count}})</button>
         </form>

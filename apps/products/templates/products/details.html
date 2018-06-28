@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   {% load static %}
+  {% load mathfilters %}
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   <script type="text/javascript" src="{% static 'products/js/dashboard_view.js' %}"></script>
   <link rel="stylesheet" type="text/css" href="{% static 'products/css/dashboard_view.css' %}" />
@@ -17,7 +18,7 @@
   <div class="nav-wrapper blue-grey darken-2">
     <a href="" class="brand-logo">&nbsp;&nbsp;&nbsp;&nbsp;Hello {{request.session.user_first_name}}</a>
     <ul id="nav-mobile" class="right hide-on-med-and-down">
-      {% if admin %}
+      {% if user.admin %}
       <li>        
         <form action="/orders/dashboard/view/" method="POST">
           {% csrf_token %}
@@ -32,7 +33,7 @@
         </form>
       </li>
       <li>
-        <form action="/products/cart/" method="POST">
+        <form action="/orders/cart/" method="POST">
           {% csrf_token %}
           <button class="waves-effect waves-teal btn-flat white-text" type="submit">Cart ({{request.session.cart_count}})</button>
         </form>
@@ -57,9 +58,9 @@
             <h4>Product Name: {{ product.name }}</h4>
             <h5>Description: {{ product.desc }}</h5>
             <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem aperiam eum laboriosam molestiae officiis fugit nemo aliquam animi! Laborum quae ducimus, beatae laudantium est accusantium rerum repudiandae quas ullam aperiam.</h5>
-            <h5>Price: ${{ product.price }}</h5>
+            <h5>Price: ${{ product.price|div:"100"}}</h5>
             <span>
-              <form method="POST" action="/products/cartprocess/{{ product.id }}/">
+              <form method="POST" action="/orders/cartprocess/{{ product.id }}/">
                 {% csrf_token %}
                 <input type="number" name="quantity" value=1 min=1 max=100 class="col s2 m2" style="color: white;">
                 <button class="btn waves-effect waves-light" type="submit" style="margin-left: 30px; margin-top: 10px;">

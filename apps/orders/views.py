@@ -4,113 +4,107 @@ from django.contrib import messages
 from django.conf.urls.static import static
 
 def dashboard_view(request):
-  if request.session["user_id"] == 1:
-    return render(request, "orders/dashboard_view.html")
-  return redirect("/")
+  user = User.objects.get(id=request.session["user_id"])
+  if not user.admin:
+    return redirect("/products/view/")
+  orders = Order.objects.all()
+  orderlists = OrderProductList.objects.all()
+  context = {
+    "user": user,
+    "orders": orders,
+    "orderlists": orderlists
+  }
+  return render(request, "orders/dashboard_view.html", context)
 
 def dashboard_order_details(request, order_id):
-  if request.session["user_id"] == 1:
-    return render(request, "orders/dashboard_details.html", { "order_id": order_id }) 
-  return redirect("/")
+  user = User.objects.get(id=request.session["user_id"])
+  if not user.admin:
+    return redirect("/products/view/")
+  order = Order.objects.get(id=order_id)
+  orderlist = OrderProductList.objects.filter(order=order)
+  context = {
+    "user": user,
+    "order_id": order_id,
+    "order": order,
+    "orderlist": orderlist,
+  }
+  print(orderlist)
+  return render(request, "orders/dashboard_details.html", context)
 
-# def login(request):
-#   if request.method == "POST":
-#     try:
-#       result = User.objects.login_validator(request.POST)
-#       if "success" in result:
-#         request.session["user_id"] = result["success"].id
-#         request.session["user_first_name"] = result["success"].first_name
-#         messages.add_message(request, messages.SUCCESS, 'Log in successful', extra_tags="log_in")
-#         return redirect("/orders/view/")
-#       else:
-#         messages.add_message(request, messages.ERROR, 'Invalid login credentials', extra_tags="invalid_login")
-#         return redirect("/")
-#     except:
-#       messages.add_message(request, messages.ERROR, 'Invalid login credentials', extra_tags="invalid_login")
-#       return redirect("/")
-#   else:
-#     return redirect("/")
+def checkout(request):
+  order = Order.objects.get(id=request.session["order_id"])
+  context = {
+    "user": User.objects.get(id=request.session["user_id"]),
+    "order": order,
+    "orderlist": OrderProductList.objects.filter(order=order)
+  }
+  return render(request, "orders/checkout.html", context)
 
-# def register(request):
-#   if request.method == "POST":
-#     try:    
-#       result = User.objects.registration_validator(request.POST)
-#       if "success" in result:
-#         request.session["user_id"] = result["success"].id
-#         request.session["user_first_name"] = result["success"].first_name
-#         messages.add_message(request, messages.SUCCESS, 'Registration successful', extra_tags="registration")
-#         return redirect('/orders/view/')
-#       else:
-#         for key, value in result.items():
-#           messages.error(request, value, extra_tags=key)
-#         return redirect('/')
-#     except:
-#       pass
+def checkoutprocess(request):
+  temp_cart = []
+  for item in request.session["cart"]:
+    temp = Product.objects.get(id = item["id"])
+    temp.quantity = item["quantity"]
+    temp.total = item["total"]
+    temp.save()
+    temp_cart.append(temp)
+  Orders.objects.create()
+  return redirect("/orders/checkout/")
 
-#   return redirect("/")
+def cartprocess(request, product_id):
+  if "cart" not in request.session:
+    request.session["cart"] = []
+  product = Product.objects.get(id=product_id)
+  item = {
+    'id': product.id,
+    'name': product.name,
+    'quantity': request.POST["quantity"],
+    'price': product.price,
+    'total': product.price * int(request.POST["quantity"])
+  }
+  request.session["cart"].append(item)
+  request.session["cart_count"] += int(request.POST["quantity"])
+  request.session.modified = True
+  return redirect("/orders/cart/")
 
-# def logout(request):
-#   request.session.clear()
-#   messages.add_message(request, messages.SUCCESS, 'Logout successful', extra_tags="log_out")
-#   return redirect("/")
+def delete_cart_item(request):
+  product = request.GET.get("product","")
+  idx = None
+  for i in range(len(request.session["cart"])):
+    if request.session["cart"][i]["name"] == product:
+      idx = i
+      request.session["cart_count"] -= int(request.session["cart"][i]["quantity"])
+      break
+  print(request.session["cart"])
+  if idx != None:
+    request.session["cart"].pop(idx)
+    request.session.modified = True
+  return redirect("/orders/cart/")
 
-# def orders(request):
-#   if "user_id" not in request.session:
-#     return redirect("/")
-#   return render(request, "orders/orders.html")
+def cart(request):
+  total = 0
+  if "cart" in request.session:
+    for item in request.session["cart"]:
+      total += item["total"]
 
-# def add_quote(request):
-#   try:    
-#     result = Quote.objects.quote_validator(request.POST, request.session["user_id"])
-#     if "success" in result:
-#       messages.add_message(request, messages.SUCCESS, 'Quote added', extra_tags="update")
-#       return redirect('/quotes/')
-#     else:
-#       for key, value in result.items():
-#         messages.error(request, value, extra_tags=key)
-#       return redirect('/quotes/')
-#   except:
-#     pass
+  context = {
+    "user": User.objects.get(id=request.session["user_id"]),
+    "total": total,
+  }
+  return render(request, "orders/cart.html", context)
 
-#   return redirect("/quotes/")
+def checkoutprocess(request):
+  total = request.GET.get("total",0)
+  quantities = []
+  order = Order.objects.create(buyer=User.objects.get(id=request.session["user_id"]), status="pending", total=total)
+  for item in request.session["cart"]:
+    order.products.add(Product.objects.get(id=item["id"]))
+    quantities.append(item["quantity"])
+  order.save()
+  for i in range(len(order.products.all())):
+    OrderProductList.objects.create(order=order, product=order.products.all()[i], quantity=quantities[i])
+  request.session["order_id"] = order.id
+  request.session["cart_count"] = 0
+  del request.session["cart"]
+  return redirect("/orders/checkout/")
 
-# def user_details(request, id):
-#   context = {
-#     "user": User.objects.get(id=id),
-#     "quotes": Quote.objects.filter(poster=User.objects.get(id=id)).order_by('-created_at')
-#   }
-#   return render(request, "index/user_details.html", context)
-
-# def update_user_details(request):
-#   return render(request, "index/update_user_details.html", { "user": User.objects.get(id=request.session["user_id"]) })
-
-# def update_user_details_process(request):
-#   try:    
-#     result = User.objects.update_validator(request.POST, request.session["user_id"])
-#     if "success" in result:
-#       request.session["user_first_name"] = result["success"].first_name
-#       messages.add_message(request, messages.SUCCESS, 'Account information updated', extra_tags="update")
-#       return redirect('/quotes/')
-#     else:
-#       for key, value in result.items():
-#         messages.error(request, value, extra_tags=key)
-#       print("Patrick is a tamago")
-#       return redirect('/user/details/update/')
-#   except:
-#     pass
-
-#   return redirect("/quotes/")
-
-# def delete_quote(request, quote_id):
-#   Quote.objects.get(id=quote_id).delete()
-#   return redirect('/quotes/')
-
-# def like_quote(request, quote_id):
-#   like = Quote.objects.get(id=quote_id)
-#   user = User.objects.get(id=request.session["user_id"])
-#   if user not in like.liked_by.all():
-#     like.liked_by.add(user)
-#     like.save()
-#   else:
-#     pass
-#   return redirect('/quotes/')

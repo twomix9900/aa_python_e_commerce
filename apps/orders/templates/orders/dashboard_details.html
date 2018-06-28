@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   {% load static %}
+  {% load mathfilters %}
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
@@ -53,59 +54,51 @@
       <div class="col s12 m4">
         <div class="card blue-grey">
           <div class="card-content white-text">
-            <span class="card-title">Order ID: {{ order_id }}</span>
-            <p>Customer Shipping Info:</p>
-            <p>Name: Bob</p>
-            <p>Address: 123 Apple St</p>
-            <p>City: Los Angeles</p>
-            <p>State: CA</p>
-            <p>Zip: 90020</p>
+            <h6>Customer Shipping Info</h6>
+            <p>Name: {{ order.shipping_first_name }} {{ order.shipping_last_name }}</p>
+            <p>Address: {{ order.shipping_address_1 }} {{ order.shipping_address_2 }}</p>
+            <p>City: {{ order.shipping_city }}</p>
+            <p>State: {{ order.shipping_state }}</p>
+            <p>Zip: {{ order.shipping_zip }}</p>
             <hr>
-            <p>Customer Billing Info:</p>
-            <p>Name: Bob</p>
-            <p>Address: 123 Apple St</p>
-            <p>City: Los Angeles</p>
-            <p>State: CA</p>
-            <p>Zip: 90020</p>
+            <h6>Customer Billing Info</h6>
+            <p>Name: {{ order.billing_first_name }} {{ order.billing_last_name }}</p>
+            <p>Address: {{ order.billing_address_1 }} {{ order.billing_address_2 }}</p>
+            <p>City: {{ order.billing_city }}</p>
+            <p>State: {{ order.billing_state }}</p>
+            <p>Zip: {{ order.billing_zip }}</p>
           </div>
         </div>
       </div>
       
-      <div class="col s12 m7" >
+      <div class="col s12 m8" >
         <table class="striped" style="margin-bottom: 75px;">
           <thead>
             <tr>
-              <th>Order ID</th>
-              <th>Name</th>
-              <th>Date</th>
-              <th>Billing Address</th>
+              <th>Product ID</th>
+              <th>Product Name</th>
+              <th>Quantity</th>
+              <th>Unit Price</th>
               <th>Total</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td><a href="">1</a></td>
-              <td>Bob</td>
-              <td>9/6/2018</td>
-              <td>123 Apple St. Los Angeles, CA 90020</td>
-              <td>$149.99</td>
-            </tr>
+            {% for product in orderlist %}
+              <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.product.name }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>${{ product.product.price|div:"100" }}</td>
+                <td>${{ product.product.price|mul:product.quantity|div:"100" }}</td>
+              </tr>
+            {% endfor %}
           </tbody>
         </table>
-        <div class="col s12 m6">
+        <div>
           <div class="card blue-grey">
             <div class="card-content white-text">
-            <span class="card-title">Status:</span>
-            <p>Shipped</p>
-          </div>
-          </div>
-        </div>
-        <div class="col s12 m6">
-          <div class="card blue-grey">
-            <div class="card-content white-text">
-              <span class="card-title">Total Price: $30.98</span>
-              <p>Sub total: $29.98</p>
-              <p>Shipping: $1.00</p>
+              <span class="card-title">Total: ${{ order.total|div:"100" }}</span> 
+              <p>Statues: {{ order.status }}</p>
             </div>
           </div>
         </div>

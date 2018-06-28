@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   {% load static %}
+  {% load mathfilters %}
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   <script type="text/javascript" src="{% static 'products/js/cart.js' %}"></script>
   <link rel="stylesheet" type="text/css" href="{% static 'products/css/dcart.css' %}" />
@@ -17,7 +18,7 @@
   <div class="nav-wrapper blue-grey darken-2">
     <a href="" class="brand-logo">&nbsp;&nbsp;&nbsp;&nbsp;Hello {{request.session.user_first_name}}</a>
     <ul id="nav-mobile" class="right hide-on-med-and-down">
-      {% if admin %}
+      {% if user.admin %}
       <li>        
         <form action="/orders/dashboard/view/" method="POST">
           {% csrf_token %}
@@ -32,7 +33,7 @@
         </form>
       </li>
       <li>
-        <form action="/products/cart/" method="POST">
+        <form action="/orders/cart/" method="POST">
           {% csrf_token %}
           <button class="waves-effect waves-teal btn-flat white-text" type="submit">Cart ({{request.session.cart_count}})</button>
         </form>
@@ -50,8 +51,32 @@
 <body>
   <div class="container">
     <div class="col s12 m12">
-      <h1>Thanks for shopping with us! Your total was $120</h1>
+      <h1>Thanks for shopping with us! Your total was ${{ order.total|div:"100" }}</h1>
     </div>
+
+    <table class="striped">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Unit Price</th>
+          <th>Quantity</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for item in orderlist %}
+          <tr>
+            <td>{{ item.product.name }}</td>
+            <td>${{ item.product.price|div:"100"}}</td>
+            <td>
+              {{ item.quantity }}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
 </body>
