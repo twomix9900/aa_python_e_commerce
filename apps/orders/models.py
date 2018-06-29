@@ -6,7 +6,7 @@ from apps.products.models import Product
 class Order(models.Model):
   products = models.ManyToManyField(Product, related_name="orders", blank=True)
   buyer = models.ForeignKey(User, related_name="orders")
-  status = models.CharField(max_length=50)
+  status = models.CharField(max_length=50, default="Order in process")
   total = models.IntegerField(default=1)
   shipping_first_name = models.CharField(max_length=50, default="")
   shipping_last_name = models.CharField(max_length=50, default="")

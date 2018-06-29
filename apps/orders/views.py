@@ -2,17 +2,27 @@ from django.shortcuts import render, HttpResponse, redirect
 from .models import *
 from django.contrib import messages
 from django.conf.urls.static import static
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def dashboard_view(request):
   user = User.objects.get(id=request.session["user_id"])
   if not user.admin:
     return redirect("/products/view/")
-  orders = Order.objects.all()
+  order_list = Order.objects.all()
+  page = request.GET.get("page", 1)
+  paginator = Paginator(order_list, 5)
+  try:
+    orders = paginator.page(page)
+  except PageNotAnInteger:
+    orders = paginator.page(1)
+  except EmptyPage:
+    orders = paginator.page(paginator.num_pages)
   orderlists = OrderProductList.objects.all()
   context = {
     "user": user,
     "orders": orders,
-    "orderlists": orderlists
+    "orderlists": orderlists,
+    "select_options": ["Shipped", "Order in process", "Cancelled"]
   }
   return render(request, "orders/dashboard_view.html", context)
 
@@ -28,7 +38,6 @@ def dashboard_order_details(request, order_id):
     "order": order,
     "orderlist": orderlist,
   }
-  print(orderlist)
   return render(request, "orders/dashboard_details.html", context)
 
 def checkout(request):
@@ -75,7 +84,6 @@ def delete_cart_item(request):
       idx = i
       request.session["cart_count"] -= int(request.session["cart"][i]["quantity"])
       break
-  print(request.session["cart"])
   if idx != None:
     request.session["cart"].pop(idx)
     request.session.modified = True
@@ -96,7 +104,7 @@ def cart(request):
 def checkoutprocess(request):
   total = request.GET.get("total",0)
   quantities = []
-  order = Order.objects.create(buyer=User.objects.get(id=request.session["user_id"]), status="pending", total=total)
+  order = Order.objects.create(buyer=User.objects.get(id=request.session["user_id"]), total=total, shipping_first_name=request.POST["shipping_first_name"], billing_first_name=request.POST["billing_first_name"], shipping_last_name=request.POST["shipping_last_name"], billing_last_name=request.POST["billing_last_name"], shipping_address_1=request.POST["shipping_address_1"], billing_address_1=request.POST["billing_address_1"], shipping_address_2=request.POST["shipping_address_2"], billing_address_2=request.POST["billing_address_2"], shipping_city=request.POST["shipping_city"], billing_city=request.POST["billing_city"], shipping_state=request.POST["shipping_state"], billing_state=request.POST["billing_state"], shipping_zip=request.POST["shipping_zip"], billing_zip=request.POST["billing_zip"], cc_number=request.POST["cc_number"], cc_security_code=request.POST["cc_security_code"], cc_exp_month=request.POST["cc_exp_month"], cc_exp_year=request.POST["cc_exp_year"])
   for item in request.session["cart"]:
     order.products.add(Product.objects.get(id=item["id"]))
     quantities.append(item["quantity"])
@@ -108,3 +116,8 @@ def checkoutprocess(request):
   del request.session["cart"]
   return redirect("/orders/checkout/")
 
+def dashboard_edit_order(request, order_id):
+  order = Order.objects.get(id=order_id)
+  order.status = request.POST["status"]
+  order.save()
+  return redirect("/orders/dashboard/view/")

@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   {% load static %}
+  {% load mathfilters %}
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   <script type="text/javascript" src="{% static 'products/js/view.js' %}"></script>
   <link rel="stylesheet" type="text/css" href="{% static 'products/css/view.css' %}" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
-  <title>View Products</title>
+  <title>Dashboard View</title>
 </head>
 
 <nav>
@@ -48,23 +49,6 @@
 <body>
 
   <div class="container">
-    <div class="row">
-      <div class="input-field col s12 m4">
-        <form>
-          <input placeholder="Search" id="search" name="search" type="text" class="validate">
-        </form>
-      </div>
-
-      <div class="input-field col s-12 m4 offset-m4">
-        <form>
-          <button class="btn waves-effect blue-grey waves-light" type="submit">
-            Add New Product
-          </button>
-        </form>
-      </div>
-      
-    </div>
-
     <h1>VIEW PRODUCTS</h1>
     <table class="highlight">
       <thead>
@@ -72,37 +56,64 @@
           <th>PICTURE</th>
           <th>ID</th>
           <th>Name</th>
-          <th>Inventory Count</th>
-          <th>Quantity Sold</th>
-          <th>Action</th>
+          <th>Unit Price</th>
+          <th></th>
         </tr>
       </thead>
 
       <tbody>
-        <tr>
-          <td><a href="">X</a></td>
-          <td>1</td>
-          <td>T-Shirt</td>
-          <td>123</td>
-          <td>1000</td>
-          <td>
-            <a href="">edit</a>
-            <span> | </span>
-            <a href="">delete</a>
-          </td>
-        </tr>
+        {% for product in products %}
+          <tr>
+            {% if product.image %}
+              <td><img src={{ product.image.url }} style="width:100px;"></td>
+            {% else %}
+              <td><img src="https://www.duall.com/store/image/products/magnified/110935_110935.jpg" style="width:100px;"></td>
+            {% endif %}
+            <td>{{ product.id }}</td>
+            <td>{{ product.name }}</td>
+            <td>${{ product.price|div:"100" }}</td>
+            <td>
+              <form style="display:inline" method="POST" action="/products/{{product.id}}/dashboard/edit_status/">
+                {% csrf_token %}
+                <button class="waves-effect waves-teal btn-flat" type="submit">Edit</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
+    <div class="row">
+      <div>
+        <form action="/products/dashboard/add/" method="POST">
+          {% csrf_token %}
+          <button class="btn waves-effect blue-grey waves-light" type="submit">
+            Add New Product
+          </button>
+        </form>
+      </div>
+    </div>
 
+  {% if products.has_other_pages %}
     <ul class="pagination">
-      <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-      <li class="active"><a href="#!" class="pagination-active">1</a></li>
-      <li class="waves-effect"><a href="#!">2</a></li>
-      <li class="waves-effect"><a href="#!">3</a></li>
-      <li class="waves-effect"><a href="#!">4</a></li>
-      <li class="waves-effect"><a href="#!">5</a></li>
-      <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+      {% if products.has_previous %}
+        <li><a href="?page={{ products.previous_page_number }}"><i class="material-icons" style="color: black;">chevron_left</i></a></li>
+      {% else %}
+        <li class="disabled" style="color: lightgrey;"><i class="material-icons">chevron_left</i></a></li>
+      {% endif %}
+      {% for i in products.paginator.page_range %}
+        {% if products.number == i %}
+          <li class="active"><a href="#!" class="pagination-active" style="color: white">{{ i }}</a></li>
+        {% else %}
+        <li class="waves-effect"><a href="?page={{ i }}" style="color: black;">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if products.has_next %}
+        <li class="waves-effect"><a href="?page={{ products.next_page_number }}"><i class="material-icons" style="color: black;">chevron_right</i></a></li>
+      {% else %}
+        <li class="disabled" style="color: lightgrey;"><i class="material-icons">chevron_right</i></li>
+      {% endif %}
     </ul>
+  {% endif %}
 
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>

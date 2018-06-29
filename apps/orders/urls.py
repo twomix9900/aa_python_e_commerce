@@ -9,4 +9,5 @@ urlpatterns = [
   url('^cart/delete/$', views.delete_cart_item),
   url('^cart/$', views.cart),
   url('^cartprocess/(?P<product_id>\d+)/$', views.cartprocess),
+  url('^dashboard/(?P<order_id>\d+)/edit/$', views.dashboard_edit_order),
 ]

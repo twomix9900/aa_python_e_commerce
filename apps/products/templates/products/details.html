@@ -11,7 +11,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'products/css/dashboard_view.css' %}" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
-  <title>View Products</title>
+  <title>Details</title>
 </head>
 
 <nav>
@@ -54,7 +54,12 @@
       <div class="col s10 m8">
         <div class="card blue-grey darken-1">
           <div class="card-content white-text">
-            <img src="{{ product.image }}" style="height: 195px">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" style="height: 195px">
+            {% else %}
+              <img src="https://www.duall.com/store/image/products/magnified/110935_110935.jpg" style="width:195px;">
+            {% endif %}
+
             <h4>Product Name: {{ product.name }}</h4>
             <h5>Description: {{ product.desc }}</h5>
             <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem aperiam eum laboriosam molestiae officiis fugit nemo aliquam animi! Laborum quae ducimus, beatae laudantium est accusantium rerum repudiandae quas ullam aperiam.</h5>

@@ -11,7 +11,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'products/css/dcart.css' %}" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
-  <title>View Products</title>
+  <title>Cart</title>
 </head>
 
 <nav>
@@ -94,83 +94,83 @@
             {% csrf_token %}
             <h3>Shipping Information</h3>
             <div class="input-field col s6">
-              <input name="shipping_first_name" placeholder="First Name" type="text" class="validate" value="{{ user.shipping_first_name }}">
+              <input name="shipping_first_name" placeholder="First Name" type="text" class="validate">
               <label>First Name</label>
             </div>
             <div class="input-field col s6">
-              <input name="shipping_last_name" placeholder="Last Name"type="text" class="validate" value="{{ user.shipping_last_name }}">
+              <input name="shipping_last_name" placeholder="Last Name"type="text" class="validate">
               <label>Last Name</label>
             </div>
 
             <div class="input-field col s12">
-              <input name="shipping_address_1" placeholder="Address 1" type="text" class="validate" value="{{ user.shipping_address_1 }}">
+              <input name="shipping_address_1" placeholder="Address 1" type="text" class="validate">
               <label>Address 1</label>
             </div>
 
             <div class="input-field col s12">
-              <input name="shipping_address_2" placeholder="Address 2" type="text" class="validate" value="{{ user.shipping_address_2 }}">
+              <input name="shipping_address_2" placeholder="Address 2" type="text" class="validate">
               <label>Address 2</label>
             </div>
 
             <div class="input-field col m6 s6">
-              <input name="shipping_city" placeholder="City" type="text" class="validate" value="{{ user.shipping_city }}">
+              <input name="shipping_city" placeholder="City" type="text" class="validate">
               <label>City</label>
             </div>
             <div class="input-field col m3 s3">
-              <input name="shipping_state" placeholder="State" type="text" class="validate" value="{{ user.shipping_state }}">
+              <input name="shipping_state" placeholder="State" type="text" class="validate">
               <label>State</label>
             </div>
             <div class="input-field col m3 s3">
-              <input name="shipping_zip_code" placeholder="Zip Code" type="text" class="validate" value="{{ user.shipping_zip }}">
+              <input name="shipping_zip" placeholder="Zip Code" type="text" class="validate">
               <label>Zip Code</label>
             </div>
 
             <h3>Billing Information</h3>
             <div class="input-field col s6">
-              <input name="billing_first_name" placeholder="First Name" type="text" class="validate" value="{{ user.billing_first_name }}">
+              <input name="billing_first_name" placeholder="First Name" type="text" class="validate">
               <label>First Name</label>
             </div>
             <div class="input-field col s6">
-              <input name="billing_last_name" placeholder="Last Name" type="text" class="validate" value="{{ user.billing_last_name }}">
+              <input name="billing_last_name" placeholder="Last Name" type="text" class="validate">
               <label>Last Name</label>
             </div>
 
             <div class="input-field col s12">
-              <input name="billing_address_1" placeholder="Address 1" type="text" class="validate" value="{{ user.billing_address_1 }}">
+              <input name="billing_address_1" placeholder="Address 1" type="text" class="validate">
               <label>Address 1</label>
             </div>
 
             <div class="input-field col s12">
-              <input name="billing_address_2" placeholder="Address 2" type="text" class="validate" value="{{ user.billing_address_2 }}">
+              <input name="billing_address_2" placeholder="Address 2" type="text" class="validate">
               <label>Address 2</label>
             </div>
 
             <div class="input-field col m6 s6">
-              <input name="billing_city" placeholder="City" type="text" class="validate" value="{{ user.billing_city }}">
+              <input name="billing_city" placeholder="City" type="text" class="validate">
               <label>City</label>
             </div>
             <div class="input-field col m3 s3">
-              <input name="billing_state" placeholder="State" type="text" class="validate" value="{{ user.billing_state }}">
+              <input name="billing_state" placeholder="State" type="text" class="validate">
               <label>State</label>
             </div>
             <div class="input-field col m3 s3">
-              <input name="billing_zip_code" placeholder="Zip Code" type="text" class="validate" value="{{ user.billing_zip }}">
+              <input name="billing_zip" placeholder="Zip Code" type="text" class="validate">
               <label>Zip Code</label>
             </div>
             <h3>Credit Card Information</h3>
             <div class="input-field col m6 s6">
-              <input name="card_number" placeholder="Card Number" type="text" class="validate" value="{{ user.cc_number }}">
+              <input name="cc_number" placeholder="Card Number" type="text" class="validate">
               <label>Number</label>
             </div>
             <div class="input-field col m3 s3">
-              <input name="card_security_code" placeholder="Security Code" type="text" class="validate" value="{{ user.cc_security_code }}">
+              <input name="cc_security_code" placeholder="Security Code" type="text" class="validate">
               <label>Security Code</label>
             </div>
             <div class="input-field col m1 s1">
-              <input name="card_expiration_month" placeholder="MM" type="number" min="1" max="12" value="{{ user.cc_exp_month }}">
+              <input name="cc_exp_month" placeholder="MM" type="number" min="1" max="12">
             </div>
             <div class="input-field col m1 s1">
-              <input name="card_expiration_year" placeholder="YY" type="number" min="18" max="50" value="{{ user.cc_exp_year }}">
+              <input name="cc_exp_year" placeholder="YY" type="number" min="18" max="50">
             </div>
             <button class="btn waves-effect waves-light" type="submit">Pay
               <i class="material-icons right">send</i>

@@ -9,7 +9,7 @@
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
-  <title>Order Details</title>
+  <title>Dashboard Details</title>
 </head>
 
 <nav>
@@ -85,8 +85,8 @@
           <tbody>
             {% for product in orderlist %}
               <tr>
-                <td>{{ product.id }}</td>
-                <td>{{ product.product.name }}</td>
+                <td><a href="/products/{{product.product.id}}/details/">{{ product.product.id }}</a></td>
+                <td><a href="/products/{{product.product.id}}/details/">{{ product.product.name }}</a></td>
                 <td>{{ product.quantity }}</td>
                 <td>${{ product.product.price|div:"100" }}</td>
                 <td>${{ product.product.price|mul:product.quantity|div:"100" }}</td>
@@ -98,7 +98,7 @@
           <div class="card blue-grey">
             <div class="card-content white-text">
               <span class="card-title">Total: ${{ order.total|div:"100" }}</span> 
-              <p>Statues: {{ order.status }}</p>
+              <p>Status: {{ order.status }}</p>
             </div>
           </div>
         </div>
