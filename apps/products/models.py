@@ -7,7 +7,7 @@ class Product(models.Model):
   name = models.CharField(max_length=50)
   desc = models.TextField()
   category = models.CharField(max_length=50)
-  image = models.FileField(null=True, blank=True)
+  image = models.CharField(max_length=255)
   price = models.IntegerField()
   created_at = models.DateTimeField(auto_now_add = True)
   updated_at = models.DateTimeField(auto_now_add = True)

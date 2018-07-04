@@ -65,7 +65,7 @@
         {% for product in products %}
           <tr>
             {% if product.image %}
-              <td><img src={{ product.image.url }} style="width:100px;"></td>
+              <td><img src={{ product.image }} style="width:100px;"></td>
             {% else %}
               <td><img src="https://www.duall.com/store/image/products/magnified/110935_110935.jpg" style="width:100px;"></td>
             {% endif %}

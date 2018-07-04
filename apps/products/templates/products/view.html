@@ -76,7 +76,7 @@
             <div style="display: inline-block; margin-left: 10px; margin: 5px">
 
               {% if product.image %}
-                <a href="/products/{{ product.id }}/details/"><img src="{{ product.image.url }}" style="height: 96px"></a>
+                <a href="/products/{{ product.id }}/details/"><img src="{{ product.image }}" style="height: 96px"></a>
               {% else %}
                 <a href="/products/{{ product.id }}/details/"><img src="https://www.duall.com/store/image/products/magnified/110935_110935.jpg" style="height: 96px"></a>
               {% endif %}
